@@ -14,19 +14,6 @@ class LayerNorm(nn.LayerNorm):
         return x
 
 
-# class GRA_S(nn.Module):
-#     def __init__(self, dim):
-#         super().__init__()
-#         self.gamma = nn.Parameter(torch.zeros(1, 1, 1, dim))
-#         self.beta = nn.Parameter(torch.zeros(1, 1, 1, dim))
-#
-#     def forward(self, x):
-#         p = x ** 2
-#         p = p / (p.mean(dim=(1, 2), keepdim=True) + 1e-6)
-#         p = torch.log2(1 + p)
-#         return (self.gamma * p + 1) * x + self.beta
-
-
 class GRA(nn.Module):
     def __init__(self, dim):
         super().__init__()
@@ -36,7 +23,7 @@ class GRA(nn.Module):
     def forward(self, x):
         p = x ** 2
         p = p / (p.mean(dim=-1, keepdim=True) + 1e-6)
-        p = torch.log2(1 + p)
+        p = torch.log2(1 + p) # optional
         return (self.gamma * p + 1) * x + self.beta
 
 
@@ -165,14 +152,4 @@ def granet_tiny(**kwargs):
 
 def granet_base(**kwargs):
     model = GRA_Net(depths=[3, 3, 27, 3], dims=[128, 256, 512, 1024], **kwargs)
-    return model
-
-
-def granet_large(**kwargs):
-    model = GRA_Net(depths=[3, 3, 27, 3], dims=[192, 384, 768, 1536], **kwargs)
-    return model
-
-
-def granet_huge(**kwargs):
-    model = GRA_Net(depths=[3, 3, 27, 3], dims=[352, 704, 1408, 2816], **kwargs)
     return model
