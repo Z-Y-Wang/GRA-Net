@@ -485,29 +485,7 @@ def auto_load_model(args, model, model_without_ddp, optimizer, loss_scaler, mode
                 args.resume, map_location='cpu', check_hash=True)
         else:
             checkpoint = torch.load(args.resume, map_location='cpu')
-        '''---'''
-        # buf = []
-        # for item in checkpoint['model']:
-        #     # if 'norm1' in item:
-        #     if item[:5] == '_orig':
-        #         buf.append(item)
-        # for item in buf:
-        #     # if 'norm1' in item:
-        #     # name = item.replace('norm1', 'norm')
-        #     name = item[10:]
-        #     checkpoint['model'][name] = checkpoint['model'].pop(item)
-        #
-        # buf = []
-        # for item in checkpoint['model_ema']:
-        #     # if 'norm1' in item:
-        #     if item[:5] == '_orig':
-        #         buf.append(item)
-        # for item in buf:
-        #     # if 'norm1' in item:
-        #     #     name = item.replace('norm1', 'norm')
-        #     name = item[10:]
-        #     checkpoint['model_ema'][name] = checkpoint['model_ema'].pop(item)
-        '''---'''
+            
         model_without_ddp.load_state_dict(checkpoint['model'])
         print("Resume checkpoint %s" % args.resume)
         if 'optimizer' in checkpoint and 'epoch' in checkpoint:
