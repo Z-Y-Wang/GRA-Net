@@ -38,9 +38,6 @@ def get_args_parser():
     parser.add_argument('--model', default='granet_atto', type=str, metavar='MODEL', help='Name of model to train')
     parser.add_argument('--input_size', default=224, type=int, help='image input size')
     parser.add_argument('--drop_path', type=float, default=0., metavar='PCT', help='Drop path rate (default: 0.1)')
-    parser.add_argument('--layer_decay_type', type=str, choices=['single', 'group'], default='single',
-                        help="""Layer decay strategies. The single strategy assigns a distinct decaying value for each layer,
-                        whereas the group strategy assigns the same decaying value for three consecutive layers""")
 
     # EMA related parameters
     parser.add_argument('--model_ema', type=str2bool, default=False)
@@ -121,7 +118,7 @@ def get_args_parser():
     parser.add_argument('--model_prefix', default='', type=str)
 
     # Dataset parameters
-    parser.add_argument('--data_path', default='/home/ubuntu/wzy/data/imagenet/', type=str,
+    parser.add_argument('--data_path', default='', type=str,
                         help='dataset path')
     parser.add_argument('--nb_classes', default=1000, type=int,
                         help='number of the classification types')
@@ -244,11 +241,6 @@ def main(args):
         drop_path_rate=args.drop_path,
         head_init_scale=args.head_init_scale,
     )
-    # model = convnextv2.__dict__[args.model](
-    #     num_classes=args.nb_classes,
-    #     drop_path_rate=args.drop_path,
-    #     head_init_scale=args.head_init_scale,
-    # )
 
     if args.finetune:
         checkpoint = torch.load(args.finetune, map_location='cpu')
@@ -277,11 +269,8 @@ def main(args):
         torch.nn.init.constant_(model.head.bias, 0.)
 
     model.to(device)
-    ''''''
-    # from thop import profile
-    # flops, p = profile(model, (torch.randn(1,3,224,224).to(device)))
-    ''''''
-    model = torch.compile(model) #max-autotune
+    
+    model = torch.compile(model) #torch 2.x
     model_ema = None
     if args.model_ema:
         # Important to create EMA model after cuda(), DP wrapper, and AMP but before SyncBN and DDP wrapper
