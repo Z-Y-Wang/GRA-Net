@@ -51,4 +51,5 @@ For different GRA-Net models, set '--eval' to true to implement ImageNet-1K test
 ```
 ## ImageNet-1K trained weights 
 The weights of the GRA-Net model can be obtained here.
-https://pan.baidu.com/s/19ogy4Zx45VqBMkFML5M3Nw 提取码：r3j4
+
+https://pan.baidu.com/s/1YUh5F0ZOW1VjMLF-Zoc1zQ 提取码：w7a8
